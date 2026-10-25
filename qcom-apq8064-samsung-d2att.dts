@@ -1,0 +1,240 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Samsung Galaxy S3 (d2att / SGH-I747) devicetree
+ * Based on structure from qcom-apq8064-sony-xperia-yuga.dts (same SoC/PMIC family)
+ *
+ * STATUS: SKELETON ONLY. Every section marked TODO below needs real values
+ * pulled from Samsung's stock board files in android_kernel_samsung_d2:
+ *   arch/arm/mach-msm/board-m2.c          -> gpio-keys, machine init
+ *   arch/arm/mach-msm/board-m2-gpiomux.c  -> pinctrl/pinmux nodes
+ *   arch/arm/mach-msm/board-m2-display.c  -> panel timing/init sequence
+ *   arch/arm/mach-msm/board-8064-pmic.c   -> PM8921 regulator nodes (verify d2
+ *                                            actually shares this file with the
+ *                                            board-8064* generic files, or has
+ *                                            its own board-m2-pmic equivalent)
+ *
+ * DO NOT flash a kernel built against this file with placeholder regulator
+ * values still in place -- wrong voltages can damage the PMIC/board.
+ */
+
+#include "qcom-apq8064-v2.0.dtsi"
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+#include <dt-bindings/mfd/qcom-rpm.h>
+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+
+/ {
+	model = "Samsung Galaxy S3 (d2att)";
+	compatible = "samsung,d2att", "qcom,apq8064";
+
+	aliases {
+		/* TODO: confirm which GSBI/UART is the debug console on d2 --
+		 * Yuga uses gsbi5_serial, board-m2-gpiomux.c should show
+		 * the equivalent GSBI assignment for d2's UART. */
+		serial0 = &gsbi5_serial;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+		input-name = "gpio-keys";
+
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&gpio_keys_pin_a>;
+
+		/* Real values extracted from board-m2.c gpio_table[][GPIO_REV_MAX],
+		 * BOARD_REV13 column (system_rev >= BOARD_REV13, which gpio_rev()
+		 * collapses all later hardware revisions to -- almost certainly
+		 * what a retail d2att unit is). If your specific unit somehow
+		 * predates hw rev 13, these will be wrong -- verify system_rev
+		 * via `adb shell cat /sys/class/sec/tsp/...` or similar if in doubt. */
+
+		home {
+			label = "home";
+			gpios = <&tlmm_pinmux 49 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <KEY_HOMEPAGE>;
+		};
+
+		volume-down {
+			label = "volume_down";
+			gpios = <&tlmm_pinmux 81 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <KEY_VOLUMEDOWN>;
+		};
+
+		volume-up {
+			label = "volume_up";
+			gpios = <&tlmm_pinmux 50 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <KEY_VOLUMEUP>;
+		};
+	};
+
+	/* Touchscreen and touchkey details moved below -- corrected from
+	 * Atmel mxt (wrong, dead reference-board code) to the real Melfas
+	 * MMS144 chip, see full node further down in this file. */
+
+	soc {
+		pinctrl@800000 {
+			/* Real values extracted from board-m2-gpiomux.c:
+			 * gpio_key_active_cfg / gpio_key_suspend_cfg --
+			 * shared by all three buttons (home, vol-up, vol-down).
+			 * func=GPIOMUX_FUNC_GPIO -> "gpio" function
+			 * drv=GPIOMUX_DRV_8MA    -> drive-strength <8>
+			 * pull=PULL_UP (active) / PULL_NONE (suspended) */
+			gpio_keys_pin_a: gpio-keys-active {
+				pins = "gpio49", "gpio50", "gpio81";
+				function = "gpio";
+				drive-strength = <8>;
+				bias-pull-up;
+			};
+
+			gpio_keys_pin_suspend: gpio-keys-suspend {
+				pins = "gpio49", "gpio50", "gpio81";
+				function = "gpio";
+				drive-strength = <8>;
+				bias-disable;
+			};
+		};
+
+		rpm@108000 {
+			regulators {
+				/* TODO: DO NOT reuse Yuga's regulator supply
+				 * mapping blindly. Confirm against
+				 * board-8064-pmic.c (or d2-specific equivalent)
+				 * whether d2 truly shares this PM8921 wiring,
+				 * since a wrong vin_lX-supply mapping risks
+				 * feeding a rail the wrong voltage. */
+			};
+		};
+	};
+};
+
+/* Touchscreen: Melfas MMS144 (NOT Atmel mxt -- that was dead "liquid"
+ * reference-board code, confirmed unused via machine_is_msm8960_liquid()
+ * gate in board-m2.c). Real values from arch/arm/mach-msm/board-mms-tsp.c,
+ * confirmed active for CONFIG_MACH_M2 (d2's real machine config):
+ *   GPIO_TOUCH_IRQ = 11
+ *   GPIO_TOUCH_SCL = 17
+ *   GPIO_TOUCH_SDA = 16
+ *   GPIO 10        = tsp_ldo_en (power) AND touch reset (shared line)
+ *
+ * Separate capacitive touchkeys (back/recent-apps, Cypress, distinct chip):
+ *   GPIO_TOUCH_KEY_INT = 42
+ *   GPIO_TOUCHKEY_SCL  = 47
+ *   GPIO_TOUCHKEY_SDA  = 48
+ */
+&soc {
+	i2c_touch: i2c-touch {
+		/* TODO: this needs to become a real i2c bus node once we
+		 * confirm which GSBI/QUP block backs GPIO 16/17 on APQ8064 --
+		 * board-mms-tsp.c uses raw gpio_tlmm_config, not a real i2c
+		 * controller reference, so this mapping isn't 1:1 with
+		 * mainline's i2c-gpio or QUP bindings yet. */
+		compatible = "i2c-gpio";
+		sda-gpios = <&tlmm_pinmux 16 GPIO_ACTIVE_HIGH>;
+		scl-gpios = <&tlmm_pinmux 17 GPIO_ACTIVE_HIGH>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		touchscreen@48 {
+			/* TODO: confirm real i2c address -- not yet extracted
+			 * from mms_ts platform_data struct in board-mms-tsp.c */
+			compatible = "melfas,mms144";
+			reg = <0x48>;
+			interrupt-parent = <&tlmm_pinmux>;
+			interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
+			reset-gpios = <&tlmm_pinmux 10 GPIO_ACTIVE_LOW>;
+			vdd-supply = <&pm8921_l6>; /* PLACEHOLDER -- verify against
+			                              gpio 10 tsp_ldo_en purpose */
+		};
+	};
+};
+
+/* Display: Samsung Super AMOLED panel driven through a CMC624 image
+ * enhancement/scaling chip (Samsung's standard display pipeline for this
+ * era) -- confirmed real values from board-m2-display.c / m2-gpio.h:
+ *   PMIC_GPIO_MLCD_ON    = 10  (LCD power enable)
+ *   PMIC_GPIO_IMA_PWR_EN = 11  (CMC624 power enable)
+ *   PMIC_GPIO_IMA_CMC_EN = 12  (CMC624 enable)
+ *   PMIC_GPIO_IMA_nRST   = 13  (CMC624 reset, active low)
+ *   PMIC_GPIO_IMA_SLEEP  = 14  (CMC624 sleep control)
+ *   GPIO_IMA_I2C_SDA     = 71  (CMC624 control i2c)
+ *   GPIO_IMA_I2C_SCL     = 72
+ *
+ * NOTE: msm8960_set_display_params()'s string-matching against
+ * "MIPI_VIDEO_TOSHIBA_WSVGA_PANEL_NAME" etc. is generic MSM8960
+ * reference-board boilerplate for swappable dev-board panels -- doesn't
+ * apply to d2's fixed, soldered Samsung AMOLED panel. Real panel driver
+ * file not yet located (likely drivers/video/msm/ -- still need to find
+ * it and confirm actual panel part number + timing).
+ *
+ * STILL MISSING, DO NOT GUESS: h-sync/v-sync timing, porch values, pixel
+ * clock, panel init command sequence. Building/flashing with placeholder
+ * timing here will not produce a working display even if the kernel
+ * otherwise boots -- treat this node as incomplete until those are found.
+ */
+&soc {
+	i2c_cmc624: i2c-cmc624 {
+		compatible = "i2c-gpio";
+		sda-gpios = <&tlmm_pinmux 71 GPIO_ACTIVE_HIGH>;
+		scl-gpios = <&tlmm_pinmux 72 GPIO_ACTIVE_HIGH>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cmc624@38 {
+			/* TODO: confirm real i2c address -- not yet extracted */
+			compatible = "samsung,cmc624";
+			reg = <0x38>;
+			pwr-en-gpios   = <&pm8921_gpio 11 GPIO_ACTIVE_HIGH>;
+			cmc-en-gpios   = <&pm8921_gpio 12 GPIO_ACTIVE_HIGH>;
+			reset-gpios    = <&pm8921_gpio 13 GPIO_ACTIVE_LOW>;
+			sleep-gpios    = <&pm8921_gpio 14 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	panel: panel@0 {
+		/* Panel IC: Samsung S6E8AA0X01 (confirmed via
+		 * smart_mtp_s6e8aa0x01.c). Full timing block confirmed real
+		 * from drivers/video/msm/mipi_samsung_oled_video_hd_pt.c,
+		 * samsung_has_cmc624()==true branch (d2/m2 has the CMC624,
+		 * confirmed via board-m2-display.c):
+		 *   xres=720 yres=1280 (matches d2's actual HD Super AMOLED)
+		 *   h_front_porch=158 h_back_porch=160 h_pulse_width=2
+		 *   v_front_porch=13  v_back_porch=2   v_pulse_width=1
+		 *   clk_rate=483000000 (483MHz)
+		 *   bpp=24, physical size 60mm x 107mm
+		 *
+		 * TODO: this is still MSM-fb-era platform_data-style timing,
+		 * not yet translated into real mainline DSI panel-bridge
+		 * devicetree bindings (panel-dsi-cm / simple-panel timing
+		 * node format expects clock-frequency in Hz + separate
+		 * hactive/hfront-porch/hback-porch/hsync-len properties --
+		 * structurally similar but needs correct binding names).
+		 * Init command sequence (panel_on/panel_off gamma/MTP writes)
+		 * from smart_mtp_s6e8aa0x01.c also not yet extracted.
+		 */
+		compatible = "samsung,s6e8aa0x01";
+		mlcd-en-gpios = <&pm8921_gpio 10 GPIO_ACTIVE_HIGH>;
+		status = "disabled"; /* still keep disabled -- init command
+		                         sequence not yet extracted, timing
+		                         alone won't produce a correct image */
+
+		panel-timing {
+			clock-frequency = <483000000>;
+			hactive = <720>;
+			vactive = <1280>;
+			hfront-porch = <158>;
+			hback-porch = <160>;
+			hsync-len = <2>;
+			vfront-porch = <13>;
+			vback-porch = <2>;
+			vsync-len = <1>;
+		};
+	};
+};

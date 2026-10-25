@@ -1,0 +1,235 @@
+make[1]: Entering directory '/work/kernel/lk2nd'
+including app/aboot dev/fbcon dev/keys dev/pmic/pm8921 dev/ssbi lib/debug lib/heap lib/libc lib/libfdt lib/ptable lk2nd lk2nd/boot lk2nd/device lk2nd/device/2nd lk2nd/device/menu lk2nd/display lk2nd/fastboot lk2nd/fastboot/debug lk2nd/hw/gpio lk2nd/hw/i2c lk2nd/ramoops lk2nd/rng-seed lk2nd/serialno lk2nd/smp lk2nd/smp/spin-table lk2nd/version
+including lib/bio lib/fs lib/zlib_inflate lk2nd/hw/bdev
+including lib/fs/ext2 lib/partition
+including lib/bcache
+generating build-lk2nd-msm8960/config.h
+compiling arch/arm/crt0.S
+compiling target/msm8960/init.c
+compiling target/msm8960/atags.c
+compiling target/msm8960/keypad.c
+compiling target/msm8960/meminfo.c
+compiling platform/msm8960/platform.c
+compiling platform/msm8960/acpuclock.c
+compiling platform/msm8960/gpio.c
+compiling platform/msm8960/clock.c
+compiling platform/msm_shared/debug.c
+compiling platform/msm_shared/smem.c
+compiling platform/msm_shared/smem_ptable.c
+compiling platform/msm_shared/partition_parser.c
+compiling platform/msm_shared/ab_partition_parser.c
+compiling platform/msm_shared/hsusb.c
+compiling platform/msm_shared/boot_stats.c
+compiling platform/msm_shared/qgic_common.c
+compiling platform/msm_shared/crc32.c
+compiling platform/msm_shared/mmc.c
+compiling platform/msm_shared/rpm-ipc.c
+compiling platform/msm_shared/i2c_qup.c
+compiling platform/msm_shared/uart_dm.c
+compiling platform/msm_shared/qgic.c
+compiling platform/msm_shared/crypto4_eng.c
+compiling platform/msm_shared/crypto_hash.c
+compiling platform/msm_shared/certificate.c
+compiling platform/msm_shared/scm.c
+compiling platform/msm_shared/interrupts.c
+compiling platform/msm_shared/clock-local.c
+compiling platform/msm_shared/clock.c
+compiling platform/msm_shared/clock_pll.c
+compiling platform/msm_shared/board.c
+compiling platform/msm_shared/timer.c
+compiling platform/msm_shared/nand.c
+compiling platform/msm_shared/regulator.c
+compiling platform/msm_shared/dev_tree.c
+compiling arch/arm/arch.c
+compiling arch/arm/asm.S
+compiling arch/arm/cache.c
+compiling arch/arm/cache-ops.S
+compiling arch/arm/ops.S
+compiling arch/arm/exceptions.S
+compiling arch/arm/faults.c
+arch/arm/faults.c: In function ‘exception_die’:
+arch/arm/faults.c:67:2: warning: format not a string literal and no format arguments [-Wformat-security]
+   67 |  dprintf(CRITICAL, msg);
+      |  ^~~~~~~
+compiling arch/arm/thread.c
+compiling arch/arm/dcc.S
+compiling arch/arm/mmu.c
+compiling platform/debug.c
+compiling platform/init.c
+compiling target/init.c
+compiling target/target_display.c
+compiling kernel/debug.c
+compiling kernel/dpc.c
+compiling kernel/event.c
+compiling kernel/main.c
+compiling kernel/mutex.c
+compiling kernel/thread.c
+compiling kernel/timer.c
+compiling dev/dev.c
+compiling app/app.c
+compiling app/aboot/aboot.c
+compiling app/aboot/fastboot.c
+compiling dev/fbcon/fbcon.c
+compiling dev/keys/keys.c
+compiling dev/keys/gpio_keypad.c
+compiling dev/pmic/pm8921/pm8921.c
+compiling dev/pmic/pm8921/pm8921_pwm.c
+compiling dev/ssbi/ssbi.c
+compiling lib/debug/debug.c
+compiling lib/heap/heap.c
+compiling lib/libc/atoi.c
+compiling lib/libc/bsearch.c
+compiling lib/libc/ctype.c
+compiling lib/libc/errno.c
+compiling lib/libc/gcd_lcm.c
+compiling lib/libc/itoa.c
+compiling lib/libc/printf.c
+compiling lib/libc/malloc.c
+compiling lib/libc/rand.c
+compiling lib/libc/stdio.c
+compiling lib/libc/eabi.c
+compiling lib/libc/string/arch/arm/memcpy.S
+compiling lib/libc/string/arch/arm/memset.S
+compiling lib/libc/string/memchr.c
+compiling lib/libc/string/memcmp.c
+compiling lib/libc/string/memscpy.c
+compiling lib/libc/string/strcasecmp.c
+compiling lib/libc/string/strcat.c
+compiling lib/libc/string/strchr.c
+compiling lib/libc/string/strcmp.c
+compiling lib/libc/string/strcoll.c
+compiling lib/libc/string/strcpy.c
+compiling lib/libc/string/strdup.c
+compiling lib/libc/string/strerror.c
+compiling lib/libc/string/strlcat.c
+compiling lib/libc/string/strlcpy.c
+compiling lib/libc/string/strlen.c
+compiling lib/libc/string/strncat.c
+compiling lib/libc/string/strncpy.c
+compiling lib/libc/string/strncmp.c
+compiling lib/libc/string/strnicmp.c
+compiling lib/libc/string/strnlen.c
+compiling lib/libc/string/strpbrk.c
+compiling lib/libc/string/strrchr.c
+compiling lib/libc/string/strrev.c
+compiling lib/libc/string/strspn.c
+compiling lib/libc/string/strstr.c
+compiling lib/libc/string/strtok.c
+compiling lib/libc/string/strxfrm.c
+compiling lib/libfdt/fdt.c
+compiling lib/libfdt/fdt_ro.c
+compiling lib/libfdt/fdt_wip.c
+compiling lib/libfdt/fdt_sw.c
+compiling lib/libfdt/fdt_rw.c
+compiling lib/libfdt/fdt_strerror.c
+compiling lib/libfdt/fdt_empty_tree.c
+compiling lib/libfdt/fdt_addresses.c
+compiling lib/libfdt/fdt_overlay.c
+compiling lib/libfdt/fdt_check.c
+compiling lib/ptable/ptable.c
+compiling lk2nd/init.c
+compiling lk2nd/util/cmdline.c
+compiling lk2nd/util/lkfdt.c
+lk2nd/util/lkfdt.c: In function ‘lkfdt_lookup_phandle’:
+lk2nd/util/lkfdt.c:113:9: warning: ‘phandle’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  113 |  return fdt_node_offset_by_phandle(fdt, phandle);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compiling lk2nd/util/mmu.c
+compiling lk2nd/boot/boot.c
+compiling lk2nd/boot/extlinux.c
+compiling lk2nd/boot/util.c
+compiling lk2nd/device/dts/msm8960/bundle.dts
+compiling lk2nd/device/device.c
+compiling lk2nd/device/panel.c
+compiling lk2nd/device/keys.c
+compiling lk2nd/device/leds.c
+compiling lk2nd/device/regulator-fixed.c
+compiling lk2nd/device/regulator-ldo.c
+compiling lk2nd/device/sdhc.c
+compiling lk2nd/device/2nd/device.c
+compiling lk2nd/device/2nd/match.c
+compiling lk2nd/device/2nd/parse-cmdline.c
+compiling lk2nd/device/2nd/parse-tags.c
+compiling lk2nd/device/2nd/partition.c
+compiling lk2nd/device/2nd/samsung-muic-reset.c
+compiling lk2nd/device/2nd/gpl/motorola-unit-info.c
+compiling lk2nd/device/menu/menu.c
+compiling lk2nd/display/simplefb.c
+compiling lk2nd/display/cont-splash/dma.c
+compiling lk2nd/display/cont-splash/pipe.c
+compiling lk2nd/display/cont-splash/refresh.c
+compiling lk2nd/display/cont-splash/target_display.c
+compiling lk2nd/display/cont-splash/convert.c
+compiling lk2nd/display/cont-splash/convert-neon.S
+compiling lk2nd/fastboot/fetch.c
+compiling lk2nd/fastboot/hash.c
+compiling lk2nd/fastboot/misc.c
+compiling lk2nd/fastboot/dtb.c
+compiling lk2nd/fastboot/debug/cpuid.c
+compiling lk2nd/fastboot/debug/register.c
+compiling lk2nd/hw/gpio/gpio.c
+compiling lk2nd/hw/gpio/tlmm.c
+compiling lk2nd/hw/gpio/pm8921.c
+lk2nd/hw/gpio/pm8921.c: In function ‘lk2nd_gpio_pmic_config’:
+lk2nd/hw/gpio/pm8921.c:21:2: warning: missing initializer for field ‘inv_int_pol’ of ‘struct pm8921_gpio’ [-Wmissing-field-initializers]
+   21 |  };
+      |  ^
+In file included from lk2nd/hw/gpio/pm8921.c:8:
+dev/pmic/pm8921/include/dev/pm8921.h:160:6: note: ‘inv_int_pol’ declared here
+  160 |  int inv_int_pol;
+      |      ^~~~~~~~~~~
+compiling lk2nd/hw/i2c/dt.c
+compiling lk2nd/hw/i2c/gpio_i2c.c
+compiling lk2nd/ramoops/ramoops.c
+compiling lk2nd/rng-seed/rng-seed.c
+compiling lk2nd/serialno/mac.c
+compiling lk2nd/serialno/serialno.c
+compiling lk2nd/smp/cpu-boot.c
+compiling lk2nd/smp/gpl/krait.c
+compiling lk2nd/smp/spin-table/spin-table.c
+compiling lk2nd/version/version.c
+generating build-lk2nd-msm8960/lk2nd/version/tag.c for lk2nd 23.1-next-8b46487c-20260920-dirty
+compiling build-lk2nd-msm8960/lk2nd/version/tag.c
+compiling lib/bio/bio.c
+compiling lib/bio/debug.c
+compiling lib/bio/mem.c
+compiling lib/bio/subdev.c
+compiling lib/fs/fs.c
+compiling lib/fs/debug.c
+compiling lib/zlib_inflate/zutil.c
+compiling lib/zlib_inflate/adler32.c
+compiling lib/zlib_inflate/inftrees.c
+compiling lib/zlib_inflate/inflate.c
+compiling lib/zlib_inflate/inffast.c
+compiling lib/zlib_inflate/uncompr.c
+compiling lib/zlib_inflate/decompress.c
+compiling lk2nd/hw/bdev/bdev.c
+compiling lk2nd/hw/bdev/util.c
+compiling lk2nd/hw/bdev/wrapper.c
+compiling lib/fs/ext2/ext2.c
+compiling lib/fs/ext2/dir.c
+compiling lib/fs/ext2/io.c
+compiling lib/fs/ext2/file.c
+compiling lib/partition/partition.c
+compiling lib/bcache/bcache.c
+generating build-lk2nd-msm8960/system-onesegment.ld
+linking build-lk2nd-msm8960/lk
+generating image: build-lk2nd-msm8960/lk.bin
+   text	   data	    bss	    dec	    hex	filename
+ 158788	  50380	 224800	 433968	  69f30	build-lk2nd-msm8960/lk
+arm-linux-gnueabihf-objcopy -O binary build-lk2nd-msm8960/lk build-lk2nd-msm8960/lk.bin
+generating listing: build-lk2nd-msm8960/lk.lst
+generating listing: build-lk2nd-msm8960/lk.debug.lst
+generating symbols: build-lk2nd-msm8960/lk.sym
+generating size map: build-lk2nd-msm8960/lk.size
+generating stripped elf: build-lk2nd-msm8960/lk_s.elf
+gcc -DMEMBASE=0x88F00000  target/msm8960/tools/mkheader.c -o ./build-lk2nd-msm8960/mkheader
+./build-lk2nd-msm8960/mkheader ./build-lk2nd-msm8960/lk.bin ./build-lk2nd-msm8960/emmc_appsboothd.mbn
+Image Destination Pointer: 0x88f00000
+Done execution
+cp ./build-lk2nd-msm8960/lk.bin ./build-lk2nd-msm8960/emmc_appsboot.raw
+cat ./build-lk2nd-msm8960/emmc_appsboothd.mbn ./build-lk2nd-msm8960/lk.bin > ./build-lk2nd-msm8960/EMMCBOOT.MBN
+cat ./build-lk2nd-msm8960/emmc_appsboothd.mbn ./build-lk2nd-msm8960/lk.bin > ./build-lk2nd-msm8960/emmc_appsboot.mbn
+rm -f ./build-lk2nd-msm8960/emmc_appsboothd.mbn
+generating Android boot image: build-lk2nd-msm8960/lk2nd.img
+make[1]: Leaving directory '/work/kernel/lk2nd'
